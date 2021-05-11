@@ -537,6 +537,10 @@ def startGame():
       if monsta_hit_list:
         #doNext("Game Over",235,all_sprites_list,block_list,monsta_list,pacman_collide,wall_list,gate)
         print("hit!") #TODO: change the print statement so that the ghost is erased from the screen
+        removeGhost=monsta_hit_list.pop();  #remove ghost from hit list.
+        monsta_list.remove(removeGhost);    #remove ghost from monster list, may not be needed
+        removeGhost.kill();     #delete the hit ghost.
+
       # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
       
       pygame.display.flip()
