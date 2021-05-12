@@ -453,7 +453,7 @@ def startGame():
 
     i = 0
 
-    numGhosts = monsta_list.__sizeof__()
+    numGhosts = monsta_list.__len__()
 
     # TODO:Prototype below.
     time = 0;
@@ -533,10 +533,14 @@ def startGame():
             numGhosts = numGhosts - 1
 
         # every 30 seconds the number of ghosts increases by two.
-        if time % 5000 < 50:  # need to have a little give because the milliseconds can sometimes be slightly off
+        #TODO:Change this before final submission
+        if time / 5000 >=1:  # need to have a little give because the milliseconds can sometimes be slightly off
             numGhosts = numGhosts * 2
-            for i in range(0, numGhosts):
-                print("ghost added")
+            print(numGhosts)
+            time=time-5000
+            #for i in range(0, numGhosts):
+
+                #TODO: need to add more ghosts here.
 
         # ALL GAME LOGIC SHOULD GO ABOVE THIS COMMENT
 
@@ -558,7 +562,7 @@ def startGame():
         # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
 
         pygame.display.flip()
-        clock.tick(10)  # the clock should be increasing by one second, not ten
+        clock.tick(10)  # advance the clock, and move the ghosts.
         time = time + clock.get_time()
         print(time)
 
