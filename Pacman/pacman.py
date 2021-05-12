@@ -339,6 +339,9 @@ pl = len(Pinky_directions) - 1
 bl = len(Blinky_directions) - 1
 il = len(Inky_directions) - 1
 cl = len(Clyde_directions) - 1
+#new ghost length
+ngl=bl;
+
 
 # Call this function so the Pygame library can initialize itself
 pygame.init()
@@ -401,6 +404,9 @@ def startGame():
     c_turn = 0
     c_steps = 0
 
+    ng_turn = 0;
+    ng_steps = 0;
+
     # Create the player paddle object
     Pacman = Player(w, p_h, "images/pacman.png")
     all_sprites_list.add(Pacman)
@@ -421,6 +427,11 @@ def startGame():
     Clyde = Ghost(c_w, m_h, "images/Clyde.png")
     monsta_list.add(Clyde)
     all_sprites_list.add(Clyde)
+
+    # will be inactive for now.  Set to pacman for debug purposes.
+    newGhost = Ghost(w, b_h, "images/pacman.png")
+    # monsta_list.add(newGhost)
+    # all_sprites_list.add(newGhost)
 
     # Draw the grid
     for row in range(19):
@@ -455,15 +466,14 @@ def startGame():
 
     numGhosts = monsta_list.__len__()
 
-    # TODO:Prototype below.
-    time = 0;
+    time = 0
 
     while done == False:
         # ALL EVENT PROCESSING SHOULD GO BELOW THIS COMMENT
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-
+            # pac man controls
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     Pacman.changespeed(-30, 0)
@@ -487,8 +497,9 @@ def startGame():
         # ALL EVENT PROCESSING SHOULD GO ABOVE THIS COMMENT
 
         # ALL GAME LOGIC SHOULD GO BELOW THIS COMMENT
-        Pacman.update(wall_list, gate)
 
+        Pacman.update(wall_list, gate)
+        # Ghost directions here.
         returned = Pinky.changespeed(Pinky_directions, False, p_turn, p_steps, pl)
         p_turn = returned[0]
         p_steps = returned[1]
@@ -513,6 +524,13 @@ def startGame():
         Clyde.changespeed(Clyde_directions, "clyde", c_turn, c_steps, cl)
         Clyde.update(wall_list, False)
 
+        # newGhost directions
+        returned = newGhost.changespeed(Blinky_directions, False, ng_turn, ng_steps, bl)
+        ng_turn = returned[0]
+        ng_steps = returned[1]
+        newGhost.changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
+        newGhost.update(wall_list, False)
+
         # See if the Pacman block has collided with anything.
         blocks_hit_list = pygame.sprite.spritecollide(Pacman, block_list, True)
 
@@ -527,20 +545,22 @@ def startGame():
         if monsta_hit_list:
             # doNext("Game Over",235,all_sprites_list,block_list,monsta_list,pacman_collide,wall_list,gate)
             print("hit!")
-            removeGhost = monsta_hit_list.pop();  # remove ghost from hit list.
-            monsta_list.remove(removeGhost);  # remove ghost from monster list, may not be needed
-            removeGhost.kill();  # delete the hit ghost.
+            removeGhost = monsta_hit_list.pop()  # remove ghost from hit list.
+            monsta_list.remove(removeGhost)  # remove ghost from monster list, may not be needed
+            removeGhost.kill()  # delete the hit ghost.
             numGhosts = numGhosts - 1
 
         # every 30 seconds the number of ghosts increases by two.
-        #TODO:Change this before final submission
-        if time / 5000 >=1:  # need to have a little give because the milliseconds can sometimes be slightly off
-            numGhosts = numGhosts * 2
+        # TODO:Change this before final submission
+        if time / 5000 >= 1:  # need to have a little give because the milliseconds can sometimes be slightly off
+            numGhosts = (numGhosts * 2) - numGhosts  # The num of ghosts to be added
             print(numGhosts)
-            time=time-5000
-            #for i in range(0, numGhosts):
-
-                #TODO: need to add more ghosts here.
+            time = time - 5000
+            # add the ghosts
+            # for i in range(0, numGhosts):
+            newGhost = Ghost(w, b_h, "images/Blinky.png")  # TODO: new ghost directions are wacky  Need to fix somehow
+            monsta_list.add(newGhost)
+            all_sprites_list.add(newGhost)
 
         # ALL GAME LOGIC SHOULD GO ABOVE THIS COMMENT
 
