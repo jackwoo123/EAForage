@@ -339,9 +339,8 @@ pl = len(Pinky_directions) - 1
 bl = len(Blinky_directions) - 1
 il = len(Inky_directions) - 1
 cl = len(Clyde_directions) - 1
-#new ghost length
-ngl=bl;
-
+# new ghost length
+ngl = bl;
 
 # Call this function so the Pygame library can initialize itself
 pygame.init()
@@ -429,9 +428,13 @@ def startGame():
     all_sprites_list.add(Clyde)
 
     # will be inactive for now.  Set to pacman for debug purposes.
+
+    #TODO:PROT
+    newGhosts = []
+
     newGhost = Ghost(w, b_h, "images/pacman.png")
-    # monsta_list.add(newGhost)
-    # all_sprites_list.add(newGhost)
+    #monsta_list.add(newGhost)
+    #all_sprites_list.add(newGhost)
 
     # Draw the grid
     for row in range(19):
@@ -464,7 +467,8 @@ def startGame():
 
     i = 0
 
-    numGhosts = monsta_list.__len__()
+    currGhosts = monsta_list.__len__()
+    numGhosts = 0
 
     time = 0
 
@@ -524,12 +528,19 @@ def startGame():
         Clyde.changespeed(Clyde_directions, "clyde", c_turn, c_steps, cl)
         Clyde.update(wall_list, False)
 
+        for i in range(numGhosts):
+            returned = newGhosts[i].changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
+            ng_turn = returned[0]
+            ng_steps = returned[1]
+            newGhost.changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
+            newGhost.update(wall_list, False)
+
         # newGhost directions
-        returned = newGhost.changespeed(Blinky_directions, False, ng_turn, ng_steps, bl)
-        ng_turn = returned[0]
-        ng_steps = returned[1]
-        newGhost.changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
-        newGhost.update(wall_list, False)
+        # returned = newGhost.changespeed(Blinky_directions, False, ng_turn, ng_steps, bl)
+        # ng_turn = returned[0]
+        # ng_steps = returned[1]
+        # newGhost.changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
+        # newGhost.update(wall_list, False)
 
         # See if the Pacman block has collided with anything.
         blocks_hit_list = pygame.sprite.spritecollide(Pacman, block_list, True)
@@ -548,19 +559,20 @@ def startGame():
             removeGhost = monsta_hit_list.pop()  # remove ghost from hit list.
             monsta_list.remove(removeGhost)  # remove ghost from monster list, may not be needed
             removeGhost.kill()  # delete the hit ghost.
-            numGhosts = numGhosts - 1
+            currGhosts = currGhosts - 1
 
         # every 30 seconds the number of ghosts increases by two.
         # TODO:Change this before final submission
         if time / 5000 >= 1:  # need to have a little give because the milliseconds can sometimes be slightly off
-            numGhosts = (numGhosts * 2) - numGhosts  # The num of ghosts to be added
+            numGhosts = (currGhosts * 2) - currGhosts  # The num of ghosts to be added
             print(numGhosts)
             time = time - 5000
             # add the ghosts
-            # for i in range(0, numGhosts):
-            newGhost = Ghost(w, b_h, "images/Blinky.png")  # TODO: new ghost directions are wacky  Need to fix somehow
-            monsta_list.add(newGhost)
-            all_sprites_list.add(newGhost)
+            for i in range(0, numGhosts):
+                newGhost = Ghost(w, b_h, "images/Blinky.png")
+                newGhosts.append(newGhost)  # TODO: new ghost directions are wacky  Need to fix somehow
+                monsta_list.add(newGhost)
+                all_sprites_list.add(newGhost)
 
         # ALL GAME LOGIC SHOULD GO ABOVE THIS COMMENT
 
