@@ -529,11 +529,39 @@ def startGame():
         Clyde.update(wall_list, False)
 
         for i in range(numGhosts):
-            returned = newGhosts[i].changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
-            ng_turn = returned[0]
-            ng_steps = returned[1]
-            newGhost.changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
-            newGhost.update(wall_list, False)
+
+            if i % numGhosts == 1:
+                returned = newGhosts[i].changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
+                ng_turn = returned[0]
+                ng_steps = returned[1]
+                newGhost.changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
+                newGhost.update(wall_list, False)
+            elif i % numGhosts == 2:
+                returned = newGhosts[i].changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
+                ng_turn = returned[0]
+                ng_steps = returned[1]
+                newGhost.changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
+                newGhost.update(wall_list, False)
+            elif (i % numGhosts == 3):
+                returned = newGhosts[i].changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
+                ng_turn = returned[0]
+                ng_steps = returned[1]
+                newGhost.changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
+                newGhost.update(wall_list, False)
+            else:
+                returned = newGhosts[i].changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
+                ng_turn = returned[0]
+                ng_steps = returned[1]
+                newGhost.changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
+                newGhost.update(wall_list, False)
+
+
+
+            #returned = newGhosts[i].changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
+            #ng_turn = returned[0]
+            #ng_steps = returned[1]
+            #newGhost.changespeed(Blinky_directions, False, ng_turn, ng_steps, ngl)
+            #newGhost.update(wall_list, False)
 
         # newGhost directions
         # returned = newGhost.changespeed(Blinky_directions, False, ng_turn, ng_steps, bl)
@@ -555,7 +583,7 @@ def startGame():
 
         if monsta_hit_list:
             # doNext("Game Over",235,all_sprites_list,block_list,monsta_list,pacman_collide,wall_list,gate)
-            print("hit!")
+            #print("hit!")
             removeGhost = monsta_hit_list.pop()  # remove ghost from hit list.
             monsta_list.remove(removeGhost)  # remove ghost from monster list, may not be needed
             removeGhost.kill()  # delete the hit ghost.
@@ -569,7 +597,15 @@ def startGame():
             time = time - 5000
             # add the ghosts
             for i in range(0, numGhosts):
-                newGhost = Ghost(w, b_h, "images/Blinky.png")
+                print("new ghost added")
+                if(i%numGhosts==1):
+                    newGhost = Ghost(w, b_h, "images/Blinky.png")
+                elif(i%numGhosts==2):
+                    newGhost = Ghost(w, b_h, "images/Pinky.png")
+                elif (i % numGhosts == 3):
+                    newGhost = Ghost(w, b_h, "images/Clyde.png")
+                else:
+                    newGhost = Ghost(w, b_h, "images/Inky.png")
                 newGhosts.append(newGhost)  # TODO: new ghost directions are wacky  Need to fix somehow
                 monsta_list.add(newGhost)
                 all_sprites_list.add(newGhost)
@@ -596,7 +632,7 @@ def startGame():
         pygame.display.flip()
         clock.tick(10)  # advance the clock, and move the ghosts.
         time = time + clock.get_time()
-        print(time)
+        #print(time)
 
 
 # this method contains different actions to do for cleaning up the code.
